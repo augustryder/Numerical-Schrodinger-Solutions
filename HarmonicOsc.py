@@ -3,7 +3,6 @@ import scipy.linalg as la
 import scipy.integrate as integrate
 import matplotlib.pyplot as plt
 
-
 # Infinite square well solution bases
 a = 10.0
 def B(n, x):
@@ -24,21 +23,32 @@ def V(x):
     return 0.5 * m * omega**2 * (x - a / 2)**2
 
 # discrete x-axis
-x = np.linspace(0, a, 2**14 + 1)
+x = np.linspace(0, a, 2**12 + 1)
 
 # Initialize hamiltonian and S matrices
 H = np.zeros((N, N))
 S = np.zeros((N, N))
 
+def delta(m, n):
+    if m == n: return 1
+    else: return 0
+
 for i in range(N):
     for j in range(N):
         # calculate Tij
-        integrand1 = B(i + 1, x) * d2B(j + 1, x)
-        H[i, j] += ( -1 * hbar**2 / (2 * m)) * integrate.simpson(integrand1, x=x)
+        # integrand1 = B(i + 1, x) * d2B(j + 1, x)
+        # H[i, j] += ( -1 * hbar**2 / (2 * m)) * integrate.simpson(integrand1, x=x)
+        
+        H[i, j] += delta(i + 1, j + 1) * 0.5 * ((j + 1) * np.pi / a)**2
         
         # calculate Vij
-        integrand2 = B(i + 1, x) * V(x) * B(j + 1, x)
-        H[i, j] += integrate.simpson(integrand2, x=x)
+        # integrand2 = B(i + 1, x) * V(x) * B(j + 1, x)
+        # H[i, j] += integrate.simpson(integrand2, x=x)
+        if i == j:
+            H[i, j] += (a**2 / 24) * (1 - 6 / ((j + 1) * np.pi)**2)
+        else:
+            H[i, j] += (2 * a**2 * (i + 1) * (j + 1) * (1 + (-1)**(i + j + 2))) / (((i + 1)**2 - (j + 1)**2)**2 * (np.pi)**2)
+            
 
         # calculate Sij
         integrand3 = B(i + 1, x) * B(j + 1, x)
