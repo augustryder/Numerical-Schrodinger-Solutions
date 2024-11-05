@@ -14,10 +14,10 @@ x_m = 4 * a # Boundry
 
 # Sine basis functions
 def B(n, x):
-    return np.sin(n * np.pi * x / x_m)
+    return np.sin(n * np.pi * x / 4)
 
 def dB(n, x):
-    return n * np.pi / x_m * np.cos(n * np.pi * x / x_m)
+    return n * np.pi / 4 * np.cos(n * np.pi * x / 4)
 
 # Number of basis functions
 N = 50
@@ -28,7 +28,7 @@ x = np.linspace(0, x_m, 2**10 + 1)
 # Initialize hamiltonian and S matrices
 T = np.zeros((N, N))
 A = np.zeros((N, N))
-E = 20
+E = 2
 
 for i in range(N):
     for j in range(N):
@@ -59,7 +59,7 @@ m = 1
 hbar = 1
 k = np.sqrt(2 * m * E) / hbar
 even_shift = np.atan(-k / b) - k * x_m
-outer_psi = 0.5 * np.sin([k*x0 + even_shift for x0 in x_outer])
+outer_psi = 1 * np.sin([k*x0 + even_shift for x0 in x_outer])
 
 plt.figure(figsize=(9, 9))
 plt.plot(x, inner_psi, label='ψ(x)', linewidth=1.5)

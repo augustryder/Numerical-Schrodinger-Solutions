@@ -15,12 +15,12 @@ def B(x, k, i, t):
       c2 = (t[i+k+1] - x)/(t[i+k+1] - t[i+1]) * B(x, k-1, i+1, t)
    return c1 + c2
 
-n = 10
+n = 9
 k = 3
-t = [ i for i in range(n + k + 1) ]
-c = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+t = [ 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 6, 6, 6 ]
+c = [1, 1, 1, 1, 1, 1, 1, 1, 1]
 spl = BSpline(t, c, k)
-x = np.linspace(0, 10, 3000)
+x = np.linspace(0, 6, 3000)
 
 plt.figure(figsize=(9, 9))
 assert (n >= k+1) and (len(c) >= n)
