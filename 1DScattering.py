@@ -7,18 +7,19 @@ from scipy.interpolate import BSpline
 m = 1
 hbar = 1
 
-a = 1 # Gaussian stdev
+a = 4 # Gaussian stdev
 # Gaussian potential
 def V(x):
-    V0 = 1
+    V0 = 10
     return -V0 * np.exp(-x**2 / (2 * a**2))
 
 x_m = 4 * a # Boundry 
 
-# Number of basis functions
-N = 30
 # Order
 k = 5
+# Number of basis functions
+N = x_m + k
+
 # Knot set
 t = []
 for _ in range(k):
@@ -38,6 +39,7 @@ x_full = np.linspace(-2, 2*x_m, 2**10 + 1)
 
 plt.figure(figsize=(9, 9))
 
+
 # x array, order, id, knot set, coeff arr
 def B(x, k, i, t, c):
    c[i] = 1
@@ -51,6 +53,9 @@ def dB(x, k, i, t, c):
    c[i] = 0
    return spl(x)
 
+for i in range(N):
+   plt.plot(x_inner, B(x_inner, k, i, t, c), alpha=0.1)
+   
 # Initialize hamiltonian and S matrices
 T = np.zeros((N, N))
 A = np.zeros((N, N))
@@ -65,13 +70,18 @@ for i in range(N):
         # calculate Aij
         A[i, j] = B(x_m, k, i, t, c) * B(x_m, k, j, t, c)
 
-
 eigvals, eigvecs = la.eig(T, A)
 eigvals = eigvals.real
 eigvecs = eigvecs.real
+print(eigvals)
 
-b = eigvals[1]
-cs = eigvecs[:, 1]
+idx = 0
+for i, val in enumerate(eigvals):
+    if val != float('inf'):
+        idx = i
+
+b = eigvals[idx]
+cs = eigvecs[:, idx]
 
 print("Log Derivative (-b): ", -b)
 
@@ -87,7 +97,6 @@ even_shift = np.arctan(b / k) - (k * x_m)
 A = inner_psi[-1] / np.cos(k * x_m + even_shift)
 outer_psi = A * np.cos([k * x + even_shift for x in x_outer])
 
-plt.figure(figsize=(9, 9))
 plt.plot(x_inner, inner_psi, label='ψ(x)', linewidth=1.5)
 plt.plot(x_outer, outer_psi, label='ψ(x)', linewidth=1.5)
 plt.plot(x_full, V(x_full), label="Gaussian Potential", color="black", linewidth=2)

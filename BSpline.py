@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 #    return c1 + c2
 
 # Number of basis functions
-n = 30
+n = 25
 # Order
 k = 5
 # Knot set
