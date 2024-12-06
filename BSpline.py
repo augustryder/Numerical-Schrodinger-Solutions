@@ -16,12 +16,10 @@ import matplotlib.pyplot as plt
 #    return c1 + c2
 
 # Number of basis functions
-n = 30 - 1
+n = 8
 
 # Order
 k = 5
-
-N = n + k + 1
 
 # Knot set
 t = []
@@ -35,7 +33,8 @@ for _ in range(k):
 print(t)
 
 # Coefficient array
-c = [0 for _ in range(n+1)]
+c = [0 for _ in range(n)]
+print(len(c))
 x = np.linspace(0, n - k, 10000)
 
 # id, x array 
@@ -46,7 +45,8 @@ def B(i, x):
    return spl(x)
 
 y_0 = 0.4
-basis = [ y_0 * (B(0, x) + B(1, x)) ] + [ B(i, x) for i in range(2, n+1)]
+basis = [ y_0 * (B(0, x) + B(1, x)) ] + [ B(i, x) for i in range(2, n)]
+n -= 1
 
 plt.figure(figsize=(9, 9))
 for i in range(n):
